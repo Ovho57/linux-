@@ -1,49 +1,66 @@
-# Kali Linux WSL Automated Installer
+# JAXO — Personal AI Assistant
 
-A command-line automation script for deploying a Kali Linux environment using the Windows Subsystem for Linux (WSL).
+A beginner-friendly, modular desktop/terminal AI assistant project. This repository is being rebuilt as a learning project.
 
-## Overview
+## What this first version includes
+- Chat with an OpenAI-compatible API (OpenRouter supported).
+- A simple terminal interface.
+- Local conversation history in SQLite.
+- Safe, allowlisted utility commands (time, date, calculator, help).
+- Environment-based secret configuration.
+- A modular structure that can grow into voice, desktop UI, tools, and automation.
 
-This repository provides a streamlined script to automate the setup of Kali Linux on Windows. It eliminates manual configuration by validating administrative privileges, ensuring the WSL core engine is installed and updated, and pulling the official Kali Linux distribution directly from Microsoft's repositories.
+> This is a starter, not a fully autonomous Jarvis. It does not execute arbitrary shell commands, control your computer, or run silently in the background.
 
-## Prerequisites
+## Requirements
+- Python 3.10+
+- An API key from OpenRouter or another OpenAI-compatible provider (optional for local utility commands).
 
-* Windows 10 (Build 19041 or higher) or Windows 11.
-* Hardware virtualization enabled in BIOS/UEFI.
-* Terminal running with Administrator privileges.
-* `curl` (pre-installed on modern Windows versions) or `wget`.
+## Setup (Linux / WSL)
+```bash
+git clone https://github.com/Ovho57/linux-.git
+cd linux-
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+cp .env.example .env
+```
 
-## Installation
+Edit `.env` and set your key:
+```env
+OPENAI_API_KEY=your_key_here
+OPENAI_BASE_URL=https://openrouter.ai/api/v1
+AI_MODEL=deepseek/deepseek-chat
+```
 
-Open **PowerShell** or **Windows Terminal** as an **Administrator**.
+Keep your API key private. Never commit your real `.env` file.
 
-To install via `curl`, execute:
+## Run
+```bash
+python -m jaxo
+```
 
-    curl -sL https://raw.githubusercontent.com/Ovho57/Kali-WSL-Installer/main/install.sh | bash
+## Commands
+- `/help` — show commands
+- `/time` — local time
+- `/date` — local date
+- `/calc 12 * (4 + 3)` — safe calculator
+- `/history` — recent conversation
+- `/clear` — clear the current chat context
+- `/quit` — exit
 
-To install via `wget`, execute:
+## Project roadmap
+1. Terminal assistant + API integration
+2. Memory and settings
+3. Voice input/output
+4. Desktop GUI
+5. Permission-based tools and plugins
+6. Tests, packaging, and documentation
 
-    wget -qO- https://raw.githubusercontent.com/Ovho57/Kali-WSL-Installer/main/install.sh | bash
+## Safety design
+- No arbitrary shell execution from model output.
+- No destructive actions without explicit confirmation.
+- API keys are read from environment variables.
+- Tool permissions should be narrow and auditable.
 
-
-
-## Execution Flow
-
-The `install.sh` script executes the following sequence:
-
-1. Validates elevated terminal permissions (`net session`).
-2. Installs or updates the WSL core engine without triggering a default distribution installation (`wsl --install --no-distribution`).
-3. Provisions the official Kali Linux distribution (`wsl --install -d kali-linux`).
-4. Outputs the launch command upon successful completion.
-
-## Usage
-
-Once the script completes successfully, launch the environment from your terminal:
-
-    wsl -d kali-linux
-
-During the initial boot, you will be prompted to create a UNIX username and password.
-
-## Security Note
-
-This script relies exclusively on official Microsoft and Kali Linux distribution channels via the native `wsl` command-line interface. It does not download or execute third-party binaries, nor does it bypass native Windows security controls.
+See [docs/ROADMAP.md](docs/ROADMAP.md) and [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
